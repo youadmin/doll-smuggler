@@ -2,16 +2,21 @@
   (:use [knapsack.core])
   (:use [clojure.test])
   (:use [knapsack.test.inputs.dolls])
+  (:use [knapsack.test.outputs.dolls])
 )
 
-(deftest check-collection-equality ;; Test the returned collection against expected 
-  (is (= output (sort-by :name (get-dolls input weight))))
+;; First three tests exist to validate the main test collection
+;; TEST equality of collections
+(deftest check-master-collection-equality ;; Test the returned collection against expected 
+  (is (= (sort-by :name master-expected) (sort-by :name (get-dolls master master-weight-restriction))))
 )
 
-(deftest check-total-value ;; Test the total value of returned collection 
-  (is (= 25 (reduce + (map :value (get-dolls input weight)))))
+;; TEST expected value in the knapsack
+(deftest check-master-total-value ;; Test the total value of returned collection 
+	(is (= master-expected-total-value (reduce + (map :value (get-dolls master master-weight-restriction)))))
 )
 
-(deftest check-total-weight ;; Test the total weight of returned collection 
-  (is (= 23 (reduce + (map :weight (get-dolls input weight)))))
+;; TEST expected weight of the knapsack
+(deftest check-master-total-weight ;; Test the total weight of returned collection 
+  (is (= master-expected-total-weight (reduce + (map :weight (get-dolls master master-weight-restriction)))))
 )

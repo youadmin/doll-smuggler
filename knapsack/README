@@ -1,10 +1,31 @@
 # knapsack
 
-FIXME: write description
+This is a version of the knapsack solution in clojure. The method produces a powerset of all item paths and determines the best collection based on value total for a given weight restriction.
+
+
 
 ## Usage
 
-FIXME: write
+Build system is leiningen
+
+To process the example set in {projectDir/knapsack}/inputs/dolls.txt, with a sack weight restriction of 400:
+
+lein clean
+lein deps
+lein compile
+lein run -m knapsack.core "inputs/dolls.txt" 400
+
+
+or via jar...
+lein clean
+lein deps
+lein uberjar
+java -jar knapsack-1.0.0-SNAPSHOT-standalone.jar "inputs/dolls.txt" 400
+
+To Test: 
+lein test
+
+Currently the application simply prints out the recommended items for the knapsack.
 
 ## License
 

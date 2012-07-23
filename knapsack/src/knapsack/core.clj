@@ -1,5 +1,5 @@
 (ns knapsack.core
-	(:use [knapsack.util.file :only [is-line-valid? item-input-to-map]])
+	(:use [knapsack.util.file :only [is-line-valid? item-input-to-map strip-empty-lines]])
 	(:use [knapsack.util.formatter :only [output-result]])
 	(:use [clojure.set])
 	(:use [clojure.java.io :only [reader]])
@@ -90,7 +90,7 @@
 
 			(with-open [rdr (reader file-path)]
 
-				(let [lines (line-seq rdr) mw (Integer/parseInt maximum-sack-weight)]
+				(let [raw-lines (line-seq rdr) mw (Integer/parseInt maximum-sack-weight) lines (strip-empty-lines raw-lines)]
 					(if (and (> mw 0) (every? is-line-valid? lines))
 						(output-result (get-dolls (map item-input-to-map lines) mw)	)
 						(println (str "The input file: " file-path  " or the maximum weight " maximum-sack-weight 

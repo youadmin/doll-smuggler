@@ -25,4 +25,10 @@
 	)
 )
 
+(defn strip-empty-lines [items] 
+	"Remove all empty lines from items"
+
+	;; a line must have some text to be considered acceptable for analysis
+	(filter #(> (count (first (split % #"\s"))) 0 ) items)
+)
 

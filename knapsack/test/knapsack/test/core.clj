@@ -11,12 +11,16 @@
   (is (= (sort-by :name master-expected) (sort-by :name (get-dolls master master-weight-restriction))))
 )
 
-;; TEST expected value in the knapsack
-(deftest check-master-total-value ;; Test the total value of returned collection 
-	(is (= master-expected-total-value (reduce + (map :value (get-dolls master master-weight-restriction)))))
+(deftest test-max-of-value ;; Given a sequence of elements, return the one with the greatest value 
+  (is (= 200 (:value (max-of master :value)) ))
 )
 
-;; TEST expected weight of the knapsack
-(deftest check-master-total-weight ;; Test the total weight of returned collection 
-  (is (= master-expected-total-weight (reduce + (map :weight (get-dolls master master-weight-restriction)))))
+(deftest test-max-of-weight ;; Given a sequence of elements, return the one with the greatest weight 
+  (is (= 153 (:weight (max-of master :weight)) ))
+)
+
+(def path-inputs [(hash-map :name "ben" :weight 12 :value 100)])
+
+(deftest test-path-summation-util ;; Given a sequence of elements, return the correct summation of the sequence 
+  (is (= (hash-map :associated-set [(hash-map :name "ben" :weight 12 :value 100)] :weight 12 :value 100 ) (path-summation-util path-inputs) ))
 )

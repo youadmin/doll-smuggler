@@ -4,7 +4,8 @@
 (def master-expected-total-value 1010)
 
 (def master-expected [
-	{:name "ally" :weight 4 :value 50}
+	{:name "sally" :weight 4 :value 50}
+	{:name "eddie" :weight 7 :value 20}
 	{:name "grumpy" :weight 22 :value 80}
 	{:name "dusty" :weight  43 :value 75}
 	{:name "grumpkin" :weight 42 :value 70}

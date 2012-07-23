@@ -1,5 +1,9 @@
 (ns knapsack.core
+	(:use [knapsack.util.file :only [is-line-valid? item-input-to-map]])
+	(:use [knapsack.util.formatter :only [output-result]])
 	(:use [clojure.set])
+	(:use [clojure.java.io :only [reader]])
+	(:use [clojure.string :only [split]])
 	(:gen-class)
 )
 
@@ -70,10 +74,25 @@
 
 (defn -main 
 	([]
-		(println "Expected inputs: Collection (of available dolls) Weight (knapsack restriction)")
+		(println (str "Expected input is a file whose contents contain a line for each knapsack item and a maximum content weight for the sack. \n" 
+				"Sample line entry: Sally 105 22 " "\n represents item with name: Sally, weight: 105 and value: 22"))
 	)
-	([available-containers weight-restriction]
-		(println "placeholder called, pass in the map here.")
+	([file-path maximum-sack-weight]
+		(do
+			(println (str "Processing input file: " file-path "\n for maximum sack weight: " maximum-sack-weight))
+
+			(with-open [rdr (reader file-path)]
+
+				(let [lines (line-seq rdr) mw (Integer/parseInt maximum-sack-weight)]
+					(if (and (> mw 0) (every? is-line-valid? lines))
+						(output-result (get-dolls (map item-input-to-map lines) mw)	)
+						(println (str "The input file: " file-path  " or the maximum weight " maximum-sack-weight 
+										" do not appear valid. \n" "Each line must include Name Weight Value for the file to be valid."))
+					)
+				)
+			) ;; end, open?
+		) ;; end, do
+
 	)
 )
 

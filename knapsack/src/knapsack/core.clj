@@ -39,19 +39,17 @@
 ;; Basic algorithm...
 ;; The powerset is all subsets of a given set, including the empty and complete set (original argument)
 ;; The recusion stops when the argument list is empty.
-;; We start with the argument list and recursively work toward an empty one. 
 ;; nice explanation of the powerset algorithm.
 ;;	http://www.ecst.csuchico.edu/~amk/foo/csci356/notes/ch1/solutions/recursionSol.html 
-;; the ref'd article noted that for a given set S, we find the powerset by recursively removing an element 'rfs'
-;; the powerset is equal to:
+;; From the ref'd article, it is noted that for a given set S, we find the powerset by recursively removing an element 'rfs'
+;; and calculating:
 ;; powerset(S - rfs) UNIONed with { {rfs} UNIONed with each resulting element of the powerset(S-rfs)}
 
+;; for memoization
 (declare mps)
 
-;; powerset method.
-;; this is a first pass. basically, I am producing all the known sets and then filtering, 
-;; determining which set has greatest value.
 (defn powerset [items]
+	"build the powerset for items"
 
 	(if (not-empty items)
 		(union (mps (next items))	(map #(conj % (first items)) (mps (next items) )) )
@@ -60,16 +58,25 @@
 ) ;; end, powerset
 
 
-;; memoize
+;; cache the resultant sets.
 (def mps (memoize powerset))
 
 (defn get-dolls [available-dolls weight-restriction]
 	"obtain collection from available-dolls with greatest total value given weight-restriction"
 
 		;; grab all paths, drop those paths whose weight is in excess of retricted. and determine max-of among the remaining.
-		;; the path-summation-util mapping allows us to store the weight and value, associated set for each path.
-		;; the call to retrieve associated set is the resultant set w greatest value
-		(:associated-set	(max-of (filter #(< (:weight %) weight-restriction ) (map path-summation-util (powerset available-dolls) )) :value))
+		(if-let [all-sets (powerset available-dolls)]
+
+			;; map each set to a new hash with a weight and value summary, 
+				;; remove all paths that exceeded the weight restriction
+			(let [mapped (map path-summation-util all-sets) made-weight (filter #(<= (:weight %) weight-restriction ) mapped ) ]  
+
+				;; find best knapsack collection by :value total and return the set
+				(:associated-set	(max-of made-weight :value))	
+
+			)
+			(list '())
+		)
 )
 
 (defn -main 
@@ -87,11 +94,11 @@
 					(if (and (> mw 0) (every? is-line-valid? lines))
 						(output-result (get-dolls (map item-input-to-map lines) mw)	)
 						(println (str "The input file: " file-path  " or the maximum weight " maximum-sack-weight 
-										" do not appear valid. \n" "Each line must include Name Weight Value for the file to be valid."))
+										" does not appear valid. \n" "Each line must include Name Weight Value for the file to be valid."))
 					)
 				)
-			) ;; end, open?
-		) ;; end, do
+			) 
+		) 
 
 	)
 )
